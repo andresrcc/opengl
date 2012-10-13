@@ -1,0 +1,7 @@
+TO_DO:
+
+Establecer el sistema de coordenadas [CHECK]
+
+Dibujar las figuras
+
+Configurar las camaras.

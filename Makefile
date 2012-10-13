@@ -1,7 +1,7 @@
-all: gl
+all: viewer
 
-gl: sample.c
-	gcc -g sample.c -o gl -lGL -lGLU -lglut
+viewer: viewer.c
+	gcc -g viewer.c -o viewer -lGL -lGLU -lglut
 
 clean:
 	rm -rf *o gl
