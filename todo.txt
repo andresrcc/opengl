@@ -1,8 +1,32 @@
 TO_DO:
 
 Establecer el sistema de coordenadas [CHECK]
+: Mallas
+:: Dibujar rectangulos centrados en el origen <check>
+:: Dibujar las cuadriculas <check>
+:: Aplicar Colores <check>
 
-Dibujar las figuras
+Configurar las camaras. [CHECK] 
 
-Configurar las camaras. 
-::convertir x y z a polares	  
+:Definir forma de manejar las camaras <check>
+ -> Se decidio usar la funcion LookAt
+
+:: Hacer las transformaciones entre 
+   coordenadas polares y cartesianas <check>
+
+:: Definir que hacer en tiempo inactivo (idle) <check>
+
+:: Hacer la funcion que recibe entrada del
+   teclado <check>
+
+:: Conectar la entrada del teclado a la funcion
+   display  <check>
+
+:: Hacer que la entrada se pueda obtener a penas
+   se toque la tecla <check>
+
+Dibujar objetos que se muevan en la escena
+:Importar Objetos
+:Mover Objetos
+ 
+
