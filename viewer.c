@@ -4,9 +4,9 @@
 #include "glm.h"
 
 
-float azimut = 0.78; //theta
-float elevacion = 0.78; //fi
-float distancia = 5.0; //ro
+float azimut = 0.78; //angulo theta
+float elevacion = 0.78; //angulo fi
+float distancia = 50.0; //radio esferico ro
 
 
 /**
@@ -23,19 +23,19 @@ void display(){
   //Coloreamos la ventana
   glClearColor(0.0, 0.0, 0.0, 0.0);
   
-  //IMPORTANTE
+  //IMPORTANTE:limpeamos el buffer de color y 
+  //de profundidad.
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  // Situamos la camara
-
-  //gluLookAt(10.0,10.0,10.0,20.0,0.0,0.0,0.0,1.0,0.0);
+  // Controles de la Camara
 
   gluLookAt(distancia * sin(elevacion) * sin(azimut),
 	    distancia * cos(elevacion),
 	    distancia * sin(elevacion) * cos(azimut),
 	    0.0,0.0,0.0,
 	    0.0,1.0,0.0);
-  //Dibujamos el sistema de coordenadas
+
+  //Sistema de Referencia
 
   glColor3f(.3, .3, .3);
   //Malla del plano x-z 
@@ -51,21 +51,12 @@ void display(){
    //Lineas de la malla
   glBegin(GL_LINES);
   for (i=-10; i<=10; i++){
-    if (i==0){
-      glColor3f(.6,.3,.3);
-    }else{
-      glColor3f(.25,.25,.25);
-    };
 
+    glColor3f(.25,.25,.25);
     glVertex3f(i,0,-10);
     glVertex3f(i,0,10);
     
-    if (i==0){ 
-      glColor3f(.3,.3,.6);
-    }else{
-      glColor3f(.25, .25, .25);
-    };
-
+    glColor3f(.25, .25, .25);
     glVertex3f(-10,0,i);
     glVertex3f(10,0,i);
 
@@ -83,21 +74,10 @@ void display(){
 
   glBegin(GL_LINES);
   for (i=-10; i<=10; i++){
-    if (i==0){
-      glColor3f(.6,.3,.3);
-    }else{
-      glColor3f(.25,.25,.25);
-    };
-
+ 
+    glColor3f(.25,.25,.25);
     glVertex3f(i,-10,0);
-    glVertex3f(i,10,0);
-    
-    if (i==0){ 
-      glColor3f(.3,.3,.6);
-    }else{
-      glColor3f(.25, .25, .25);
-    };
-
+    glVertex3f(i,10,0);    
     glVertex3f(-10.0,i,0);
     glVertex3f(10,i,0);
 
@@ -117,21 +97,10 @@ void display(){
 
   glBegin(GL_LINES);
   for (i=-10; i<=10; i++){
-    if (i==0){
-      glColor3f(.6,.3,.3);
-    }else{
-      glColor3f(.25,.25,.25);
-    };
 
+    glColor3f(.25,.25,.25);
     glVertex3f(0.0,-10.0,i);
     glVertex3f(0.0,10.0,i);
-    
-    if (i==0){ 
-      glColor3f(.3,.3,.6);
-    }else{
-      glColor3f(.25, .25, .25);
-    };
-
     glVertex3f(0.0,i,-10);
     glVertex3f(0.0,i,10);
 
@@ -139,7 +108,6 @@ void display(){
 
   glEnd();
   
-  // glFlush();
   glutSwapBuffers();
 }
 
@@ -164,7 +132,12 @@ void cambios_ventana(int w, int h){
 
 }
 
-void moverse (unsigned char tecla, int x, int y){
+/**
+ * Recibe la entrada del teclado, y 
+ * efectua los cambios a la camara
+ */
+
+void control_camara (unsigned char tecla, int x, int y){
 
   /* Una fraccion del vector de
    * direccion de la camara 
@@ -200,7 +173,6 @@ void moverse (unsigned char tecla, int x, int y){
 }
 
 
-
 /**
  * Funcion principal del programa
  */
@@ -210,7 +182,7 @@ int main (int argc, char** argv){
   glutInit(&argc,argv);
   glutInitWindowSize(600, 600);
   glutInitWindowPosition (10, 50);
-  glutCreateWindow("viewer");
+  glutCreateWindow("Visualizador de Modelos 3D");
 
  
   //Dibujar escena
@@ -223,7 +195,7 @@ int main (int argc, char** argv){
   glutIdleFunc(display);
 
   //Funcion que activa el input por teclado
-  glutKeyboardFunc(moverse);
+  glutKeyboardFunc(control_camara);
 
   glEnable(GL_DEPTH_TEST);
 
