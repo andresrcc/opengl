@@ -1,5 +1,11 @@
 #include <stdio.h>
 #include <GL/glut.h>
+#include <math.h>
+
+float azimut = 0.78; //theta
+float elevacion = 0.78; //fi
+float distancia = 5.0; //ro
+
 
 /**
  *Dibuja la escena
@@ -19,9 +25,14 @@ void display(){
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   // Situamos la camara
+
   //gluLookAt(10.0,10.0,10.0,20.0,0.0,0.0,0.0,1.0,0.0);
 
-  gluLookAt(3.0,3.0,10.0,0.0,0.0,0.0,0.0,1.0,0.0);
+  gluLookAt(distancia * sin(elevacion) * sin(azimut),
+	    distancia * cos(elevacion),
+	    distancia * sin(elevacion) * cos(azimut),
+	    0.0,0.0,0.0,
+	    0.0,1.0,0.0);
   //Dibujamos el sistema de coordenadas
 
   glColor3f(.3, .3, .3);
@@ -126,7 +137,8 @@ void display(){
 
   glEnd();
   
-  glFlush();
+  // glFlush();
+  glutSwapBuffers();
 }
 
 
@@ -149,6 +161,42 @@ void cambios_ventana(int w, int h){
   gluPerspective(35.0, aspectratio, 1.0, 300.0);
 
 }
+
+void moverse (unsigned char tecla, int x, int y){
+
+  /* Una fraccion del vector de
+   * direccion de la camara 
+   * (linea de observacion)
+   */
+  float k = 0.1;
+
+  switch(tecla){
+      case 'w':
+	//subir: - distancia, + elevacion
+	elevacion += k;
+	break;
+      case 'a':
+	//izquierda: 
+	azimut -= k;
+	break;
+      case 's':
+	//abajo:
+	elevacion -= k;
+	break;
+      case 'd':
+	//derecha:
+	azimut += k;
+	break;
+      case 'e':
+	distancia += k;
+	break;
+      case 'q':
+	distancia -= k;
+	break;
+  }
+  
+}
+
 
 
 /**
@@ -175,11 +223,16 @@ int main (int argc, char** argv){
   //Dibujar acorde a cambios en ventana
   glutReshapeFunc(cambios_ventana);
 
+  glutIdleFunc(display);
+
+  glutKeyboardFunc(moverse);
+
+  glEnable(GL_DEPTH_TEST);
 
   //Ejecutar todo
   glutMainLoop();
 
-  return 0;
+  return 1;
   
 
 }

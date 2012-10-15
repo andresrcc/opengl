@@ -4,4 +4,5 @@ Establecer el sistema de coordenadas [CHECK]
 
 Dibujar las figuras
 
-Configurar las camaras.
+Configurar las camaras. 
+::convertir x y z a polares	  
