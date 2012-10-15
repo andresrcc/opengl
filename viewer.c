@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <GL/glut.h>
 #include <math.h>
+#include "glm.h"
+
 
 float azimut = 0.78; //theta
 float elevacion = 0.78; //fi
@@ -40,23 +42,23 @@ void display(){
 
    //Rectangulo
   glBegin(GL_QUADS); 
-  glVertex3f( 0, -0.001, 0);
-  glVertex3f( 0, -0.001, 20);
-  glVertex3f( 20, -0.001, 20);
-  glVertex3f( 20, -0.001, 0);
+  glVertex3f( -10, -0.001, -10);
+  glVertex3f( 10, -0.001, -10);  
+  glVertex3f( 10, -0.001, 10);
+  glVertex3f( -10, -0.001, 10);
   glEnd();
 
    //Lineas de la malla
   glBegin(GL_LINES);
-  for (i=0; i<=20; i++){
+  for (i=-10; i<=10; i++){
     if (i==0){
       glColor3f(.6,.3,.3);
     }else{
       glColor3f(.25,.25,.25);
     };
 
-    glVertex3f(i,0,0);
-    glVertex3f(i,0,20);
+    glVertex3f(i,0,-10);
+    glVertex3f(i,0,10);
     
     if (i==0){ 
       glColor3f(.3,.3,.6);
@@ -64,8 +66,8 @@ void display(){
       glColor3f(.25, .25, .25);
     };
 
-    glVertex3f(0,0,i);
-    glVertex3f(20,0,i);
+    glVertex3f(-10,0,i);
+    glVertex3f(10,0,i);
 
   };
   glEnd();
@@ -73,22 +75,22 @@ void display(){
   //Maya del plano x-y
   glColor3f(.5, .2, .4);
   glBegin(GL_QUADS); 
-  glVertex3f( 0.0, -0.001, 0.0);
-  glVertex3f( 20, -0.001, 0);
-  glVertex3f( 20, 20, -0.001);
-  glVertex3f( 0.0, 20, 0.0);
+  glVertex3f( -10.0, -10.0, 0.0);
+  glVertex3f( 10.0, -10-0, 0.0);
+  glVertex3f( 10.0, 10.0, 0.0);
+  glVertex3f( -10.0, 10, 0.0);
   glEnd();
 
   glBegin(GL_LINES);
-  for (i=0; i<=20; i++){
+  for (i=-10; i<=10; i++){
     if (i==0){
       glColor3f(.6,.3,.3);
     }else{
       glColor3f(.25,.25,.25);
     };
 
-    glVertex3f(i,0,0);
-    glVertex3f(i,20,0);
+    glVertex3f(i,-10,0);
+    glVertex3f(i,10,0);
     
     if (i==0){ 
       glColor3f(.3,.3,.6);
@@ -96,8 +98,8 @@ void display(){
       glColor3f(.25, .25, .25);
     };
 
-    glVertex3f(0,i,0);
-    glVertex3f(20,i,0);
+    glVertex3f(-10.0,i,0);
+    glVertex3f(10,i,0);
 
   };
 
@@ -107,22 +109,22 @@ void display(){
   //Maya del plano z-y
   glColor3f(.3, .3, .2);
   glBegin(GL_QUADS); 
-  glVertex3f( 0.0, -0.001, 0.0);
-  glVertex3f( 0, -0.001, 20);
-  glVertex3f( -0.001, 20, 20);
-  glVertex3f( 0.0, 20, 0.0);
+  glVertex3f( 0.0, -10.0, 10.0);
+  glVertex3f( 0.0, -10.0, -10.0);
+  glVertex3f( 0.0, 10.0, -10.0);
+  glVertex3f( 0.0, 10.0, 10.0);
   glEnd();
 
   glBegin(GL_LINES);
-  for (i=0; i<=20; i++){
+  for (i=-10; i<=10; i++){
     if (i==0){
       glColor3f(.6,.3,.3);
     }else{
       glColor3f(.25,.25,.25);
     };
 
-    glVertex3f(0,0,i);
-    glVertex3f(0,20,i);
+    glVertex3f(0.0,-10.0,i);
+    glVertex3f(0.0,10.0,i);
     
     if (i==0){ 
       glColor3f(.3,.3,.6);
@@ -130,8 +132,8 @@ void display(){
       glColor3f(.25, .25, .25);
     };
 
-    glVertex3f(0,i,0);
-    glVertex3f(0,i,20);
+    glVertex3f(0.0,i,-10);
+    glVertex3f(0.0,i,10);
 
   };
 
@@ -173,7 +175,7 @@ void moverse (unsigned char tecla, int x, int y){
   switch(tecla){
       case 'w':
 	//subir: - distancia, + elevacion
-	elevacion += k;
+	elevacion -= k;
 	break;
       case 'a':
 	//izquierda: 
@@ -181,7 +183,7 @@ void moverse (unsigned char tecla, int x, int y){
 	break;
       case 's':
 	//abajo:
-	elevacion -= k;
+	elevacion += k;
 	break;
       case 'd':
 	//derecha:
@@ -210,21 +212,17 @@ int main (int argc, char** argv){
   glutInitWindowPosition (10, 50);
   glutCreateWindow("viewer");
 
-  /* Debo Incluirlos?
-  //glEnable(GL_DEPTH_TEST);
-  //glEnable(GL_CULL_FACE);
-  //glEnable(GL_LIGHTING);
-  */
-
-
+ 
   //Dibujar escena
   glutDisplayFunc(display);
 
   //Dibujar acorde a cambios en ventana
   glutReshapeFunc(cambios_ventana);
 
+  //Accion por defecto (al estar idle)
   glutIdleFunc(display);
 
+  //Funcion que activa el input por teclado
   glutKeyboardFunc(moverse);
 
   glEnable(GL_DEPTH_TEST);
