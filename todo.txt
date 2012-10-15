@@ -7,7 +7,6 @@ Establecer el sistema de coordenadas [CHECK]
 :: Aplicar Colores <check>
 
 Configurar las camaras. [CHECK] 
-
 :Definir forma de manejar las camaras <check>
  -> Se decidio usar la funcion LookAt
 
@@ -16,17 +15,19 @@ Configurar las camaras. [CHECK]
 
 :: Definir que hacer en tiempo inactivo (idle) <check>
 
-:: Hacer la funcion que recibe entrada del
-   teclado <check>
+:: Hacer la funcion que recibe entrada del teclado <check>
 
-:: Conectar la entrada del teclado a la funcion
-   display  <check>
+:: Conectar la entrada del teclado a la funcion display  <check>
 
-:: Hacer que la entrada se pueda obtener a penas
-   se toque la tecla <check>
+:: Hacer que la entrada se pueda obtener apenas se toque la tecla <check>
 
-Dibujar objetos que se muevan en la escena
+Dibujar objetos que se muevan en la escena [EN PROGRESO]
 :Importar Objetos
+::Crear al menos un objeto
+::Usar al menos tres objetos
+::Usar Libreria glmReadObj para importarlos al proyecto
+
 :Mover Objetos
- 
+::Modificar funcion control_camara para que permita mover los objetos.
+  Debemos renombrarla a "movimiento", "entrada_teclado" o algo mas general.
 
