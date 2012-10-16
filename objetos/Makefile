@@ -4,11 +4,13 @@
 #
 ###############################################################################
 
-HEADERS  = glm.h 
-SOURCES  = glm.c viewer.c 
+HEADERS  = glm.h materials.h
+SOURCES  = fog.c glm.c lightmaterial.c lightposition.c projection.c shapes.c \
+           texture.c transformation.c
 DEPENDS  = $(SOURCES:.c=.d)
 OBJECTS  = $(SOURCES:.c=.o)
-PROGRAMS = viewer 
+PROGRAMS = fog lightmaterial lightposition projection shapes texture \
+           transformation
 
 ###############################################################################
 
@@ -20,10 +22,10 @@ endif
 
 CC      = gcc
 CFLAGS  = -Wall -Wno-format $(OPTFLAGS)
-LDFLAGS = -lGL -lglut -lGLU
+# LDFLAGS = -lGL -lglut
 
 # Mac OS X: OpenGL and GLUT are frameworks, override LDFLAGS above with these
-#LDFLAGS = -framework OpenGL -framework GLUT
+LDFLAGS = -framework OpenGL -framework GLUT
 
 ###############################################################################
 
