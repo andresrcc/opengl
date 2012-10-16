@@ -19,8 +19,8 @@ OPTFLAGS = -O3 -s
 endif
 
 CC      = gcc
-CFLAGS  = -Wall -Wno-format $(OPTFLAGS)
-LDFLAGS = -lGL -lglut -lGLU
+CFLAGS  = -Wall -Wno-format -m32 $(OPTFLAGS)
+LDFLAGS = -lGL -lglut -lGLU -m32
 
 # Mac OS X: OpenGL and GLUT are frameworks, override LDFLAGS above with these
 #LDFLAGS = -framework OpenGL -framework GLUT

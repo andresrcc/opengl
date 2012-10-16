@@ -160,7 +160,7 @@ void agregar_objeto(char *path_archivo){
   glPushMatrix();
 
   glTranslatef(5,1,5);
-  glColor3f(.3,.4,.5);
+  glColor3f(.3,.4,.3);
 
   modelo = glmReadOBJ(path_archivo);
   if (!modelo) exit (0); //si no existe, exit
