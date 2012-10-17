@@ -311,7 +311,7 @@ void display(){
 	    0.0,1.0,0.0);
 
   //Establecemos el sist. de referencia
-  //sistema_referencia();
+  sistema_referencia();
 
   //Agregamos objetos al modelo
   agregar_objeto("objetos/porsche.obj",1);
