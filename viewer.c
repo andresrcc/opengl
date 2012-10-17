@@ -3,6 +3,8 @@
 #include <GL/glut.h>
 #include <math.h>
 #include "glm.h"
+#include <string.h>
+#include <stdint.h>
 
 /**
  * Variables Globales
@@ -15,6 +17,9 @@ float distancia = 50.0;
 
 //Objetos
 
+//Objeto seleccionado actualmente
+int seleccion = 1;
+
 //--Para importar .obj
 GLMmodel *modelo = NULL;
 
@@ -22,18 +27,16 @@ GLMmodel *modelo = NULL;
 
 
 struct objeto{
-  int n;
-  int x;
-  int y;
-  int z;
+//Coordenadas
+  float x;
+  float y;
+  float z;
 
-  struct objeto *proximo;
+};typedef struct objeto figura;
 
-};
 
-struct objeto *raiz;
-struct objeto *objetos;
-
+//Arreglo de objetos y sus coordenadas
+figura objetos[4];
 
 /**
  * Sistema de Referencia
@@ -120,47 +123,19 @@ void sistema_referencia(){
   glPopMatrix();
 }
 
-/**
- * Funcion para crear nuevos
- * objetos los cuales luego
- * seran agregados con la
- * funcion agregar objetos
- */
-void crear_objeto(n,x,y,z){
 
-    /* Creamos espacio para el objeto en
-   * la lista enlazada
-   */
-  while (objetos->proximo != 0){
-    objetos = objetos->proximo;
-  }
-  objetos->proximo = malloc(sizeof(struct objeto));
-
-  objetos->proximo->n = objetos->n ++;
-
-  objetos = objetos->proximo;
-
-  objetos->n = n;
-  objetos->x = x;
-  objetos->y = y;  
-  objetos->z = z;
-  objetos->proximo = 0;
-}
 
 /**
  * Agrega objetos ya creados
  * al modelo
  */
 
-void agregar_objeto(char *path_archivo){
+void agregar_objeto(char *path_archivo, int q){
 
-  //Guardamos su localizacion
-  crear_objeto(5,1,5);
-
+  //Dibujamos
   glPushMatrix();
-
-  glTranslatef(5,1,5);
-  glColor3f(.3,.4,.3);
+  glTranslatef(objetos[q].x,objetos[q].y,objetos[q].z);
+  glColor3f(2,8,3);
 
   modelo = glmReadOBJ(path_archivo);
   if (!modelo) exit (0); //si no existe, exit
@@ -202,7 +177,7 @@ void display(){
   sistema_referencia();
 
   //Agregamos objetos al modelo
-  agregar_objeto("objetos/porsche.obj");
+  agregar_objeto("objetos/porsche.obj",1);
   
   glutSwapBuffers();
 }
@@ -233,7 +208,7 @@ void cambios_ventana(int w, int h){
  * efectua los cambios a la camara
  */
 
-void movimiento (unsigned char tecla, int x, int y){
+void teclado (unsigned char tecla, int x, int y){
 
   /* Una fraccion del vector de
    * direccion de la camara 
@@ -242,46 +217,80 @@ void movimiento (unsigned char tecla, int x, int y){
   float k = 0.1;
 
   switch(tecla){
-      case 'w':
+     case 27:
+       exit(0);
+     case 'w':
 	//subir: - distancia, + elevacion
-	elevacion -= k;
-	break;
-      case 'a':
-	//izquierda: 
-	azimut -= k;
-	break;
-      case 's':
+       elevacion -= k;
+       break;
+     case 'a':
+       //izquierda: 
+       azimut -= k;
+       break;
+     case 's':
 	//abajo:
-	elevacion += k;
-	break;
-      case 'd':
+       elevacion += k;
+       break;
+     case 'd':
 	//derecha:
-	azimut += k;
-	break;
-      case 'e':
-	distancia += k;
-	break;
-      case 'q':
-	distancia -= k;
-	break;
+       azimut += k;
+       break;
+     case 'e':
+       distancia += k;
+       break;
+     case 'q':
+       distancia -= k;
+       break;      	
   }
   
 }
 
+/**
+ * Procesa las teclas especiales
+ * Flechas de izq der arriba y abajo
+ * Controlan el movimiento de un objeto
+ */
+
+void teclas_esp (int tecla, int x, int y){
+  float k = 0.1;
+
+  switch(tecla){
+      case GLUT_KEY_UP:
+	objetos[seleccion].z += k;
+	break;
+      case GLUT_KEY_LEFT:
+	objetos[seleccion].x -= k;
+	break;
+      case GLUT_KEY_RIGHT:
+	objetos[seleccion].x += k;
+
+	break;
+      case GLUT_KEY_DOWN:
+	objetos[seleccion].z -= k;
+	break;
+
+  }
+   glutPostRedisplay();
+
+}
+
+/**
+ * Situa los objetos en pos. inicial
+ */
+
+void initObjetos(){
+
+  objetos[1].x= 5;
+  objetos[1].y= 0.4;
+  objetos[1].z= 5;
+
+
+}
 
 /**
  * Funcion principal del programa
  */
 int main (int argc, char** argv){
-
-  //Inicializa lista de objetos
-  raiz = malloc(sizeof(struct objeto));
-  raiz->n = 0;
-  raiz->x = 0;
-  raiz->y = 0;
-  raiz->z = 0;
-  raiz->proximo = 0;  
-  objetos = raiz;
 
   //Inicializa la ventana
   glutInit(&argc,argv);
@@ -289,6 +298,8 @@ int main (int argc, char** argv){
   glutInitWindowPosition (10, 50);
   glutCreateWindow("Visualizador de Modelos 3D");
 
+  //Posicionamos las figuras
+  initObjetos();
  
   //Dibujar escena
   glutDisplayFunc(display);
@@ -300,14 +311,15 @@ int main (int argc, char** argv){
   glutIdleFunc(display);
 
   //Funcion que activa el input por teclado
-  glutKeyboardFunc(movimiento);
+  glutKeyboardFunc(teclado);
+  glutSpecialFunc(teclas_esp);
 
   glEnable(GL_DEPTH_TEST);
 
   //Ejecutar todo
   glutMainLoop();
 
-  return 1;
+  return 0;
   
 
 }
