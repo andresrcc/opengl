@@ -21,8 +21,8 @@ float distancia = 50.0;
 int seleccion = 1;
 
 //--Para importar .obj
-GLMmodel *modelo = NULL;
-
+GLMmodel *modelo_CARRO = NULL;
+GLMmodel *modelo_AVION = NULL;
 //--Para moverlo--
 
 
@@ -134,23 +134,38 @@ void sistema_referencia(){
  * al modelo
  */
 
-void agregar_objeto(char *path_archivo, int q){
+void dibujar_objetos(){
 
+  glEnable(GL_LIGHTING);
   //Dibujamos
   glPushMatrix();
-  glTranslatef(objetos[q].x,objetos[q].y,objetos[q].z);
+  glTranslatef(objetos[1].x,objetos[1].y,objetos[1].z);
   glColor3f(2,8,3);
 
-  modelo = glmReadOBJ(path_archivo);
-  if (!modelo) exit (0); //si no existe, exit
+  //modelo = glmReadOBJ(path_archivo);
+  //if (!modelo) exit (0); //si no existe, exit
 
-  glmUnitize(modelo);
-  glmFacetNormals(modelo);
-  glmVertexNormals(modelo, 90.0);
-
-  glmDraw(modelo, GLM_SMOOTH | GLM_MATERIAL);
-  
+  glmUnitize(modelo_CARRO);
+  glmFacetNormals(modelo_CARRO);
+  glmVertexNormals(modelo_CARRO, 90.0);
+  glEnable(GL_COLOR_MATERIAL);
+  glmDraw(modelo_CARRO, GLM_SMOOTH | GLM_MATERIAL);
+  glDisable(GL_COLOR_MATERIAL);
   glPopMatrix();
+  
+  glPushMatrix();
+  glTranslatef(objetos[2].x,objetos[2].y,objetos[2].z);
+  glColor3f(2,8,3);
+  
+  glmUnitize(modelo_AVION);
+  glmFacetNormals(modelo_AVION);
+  glmVertexNormals(modelo_AVION, 90.0);
+  glEnable(GL_COLOR_MATERIAL);
+  glmDraw(modelo_AVION, GLM_SMOOTH | GLM_MATERIAL);
+  glDisable(GL_COLOR_MATERIAL);
+  glPopMatrix();
+  glDisable(GL_LIGHTING);
+
 }
 
 GLvoid mouseAction(GLint button, GLint state, GLint x, GLint y){
@@ -412,8 +427,9 @@ void display(){
   sistema_referencia();
 
   //Agregamos objetos al modelo
-  agregar_objeto("objetos/porsche.obj",1);
-  agregar_objeto("objetos/f-16.obj",2);
+  //agregar_objeto("objetos/porsche.obj",1);
+  //agregar_objeto("objetos/f-16.obj",2);
+  dibujar_objetos();
 //Jorge
   dibujar_Joe();
     //
@@ -550,16 +566,22 @@ void initObjetos(){
  * Funcion principal del programa
  */
 int main (int argc, char** argv){
-
+  static const GLfloat ambient[4] = {1.0f,1.0f,1.0f,1.0f,1.0f};
   //Inicializa la ventana
   glutInit(&argc,argv);
   glutInitWindowSize(600, 600);
   glutInitWindowPosition (10, 50);
   glutCreateWindow("Visualizador de Modelos 3D");
-
+  glShadeModel(GL_SMOOTH);
+  glLightfv(GL_LIGHT0,GL_AMBIENT,ambient);
+  glEnable(GL_LIGHT0);
+  //glEnable(GL_LIGHTING);
   //Posicionamos las figuras
   initObjetos();
- 
+  modelo_CARRO = glmReadOBJ("objetos/porsche.obj");
+  if (!modelo_CARRO) exit (0); //si no existe, exit
+  modelo_AVION = glmReadOBJ("objetos/f-16.obj");
+  if (!modelo_AVION) exit (0); //si no existe, exit
   //Dibujar escena
   glutDisplayFunc(display);
 
