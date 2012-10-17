@@ -242,6 +242,12 @@ void dibujar_cubo(GLfloat a, GLfloat b, GLfloat c, GLfloat anch, GLfloat alt, GL
 
 
 void dibujar_Joe(){
+  
+  //Matriz mayor
+  glPushMatrix();
+  //trasladar todo el objeto
+  glTranslatef(objetos[0].x,objetos[0].y,objetos[0].z);
+  //Submatrices del objeto
   //Cabeza
   glColor3f(1.0,1.0,1.0);
   glPushMatrix();
@@ -281,7 +287,7 @@ void dibujar_Joe(){
  	 dibujar_cubo(0.0,0.0,0.0,0.1,0.1,0.5);
   glPopMatrix();
 
-
+  glPopMatrix();
 
 }
 
@@ -379,7 +385,16 @@ void teclado (unsigned char tecla, int x, int y){
        break;
      case 'q':
        distancia -= k;
-       break;      	
+       break;
+     case '0':
+       seleccion = 0;
+       break;
+     case '1':
+       seleccion = 1;
+       break;
+     case '2':
+       seleccion = 2;
+       break;
   }
   
 }
@@ -419,6 +434,11 @@ void teclas_esp (int tecla, int x, int y){
 
 void initObjetos(){
 
+  objetos[0].x = 5; 
+  objetos[0].y = 0.75;
+  objetos[0].z = -5;
+
+  //Porsche 
   objetos[1].x= 5;
   objetos[1].y= 0.4;
   objetos[1].z= 5;
