@@ -149,6 +149,99 @@ void agregar_objeto(char *path_archivo, int q){
   glPopMatrix();
 }
 
+void dibujar_cubo(GLfloat a, GLfloat b, GLfloat c, GLfloat anch, GLfloat alt, GLfloat prof){
+//	unsigned char * textura;
+//	GLuint idTextura;
+/*	FILE *file;
+	file = fopen("cajax.bmp","rb");
+	textura = (unsigned char*) malloc(256*256*4);
+	fread(textura, 256*256*4, 1, file);
+	fclose(file);
+	glGenTextures(1, &idTextura);
+	glBindTexture(GL_TEXTURE_2D, idTextura);
+	glTexImage2D(GL_TEXTURE_2D,0,3,256,256,0,GL_RGB,GL_UNSIGNED_BYTE,textura);
+	free(textura);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+*/
+	anch = anch/2;
+	alt = alt/2;
+	prof = prof/2;
+	//glEnable(GL_TEXTURE_2D);
+	glBegin(GL_QUADS);
+	//	glNormal3f(0.0f,1.0f,0.0f);
+	//	glTexCoord2f(0.0f,1.0f);
+		glVertex3f(-anch,prof,alt);
+	//	glTexCoord2f(0.0f,0.0f);
+		glVertex3f(-anch,prof,-alt);
+	//	glTexCoord2f(1.0f,0.0f);
+		glVertex3f(anch,prof,-alt);
+	//	glTexCoord2f(1.0f,1.0f);
+		glVertex3f(anch,prof,alt);
+	glEnd();
+	glBegin(GL_QUADS);
+	//	glNormal3f(1.0f,0.0f,0.0f);
+	//	glTexCoord2f(0.0f,1.0f);
+		glVertex3f(anch,prof,-alt);
+	//	glTexCoord2f(0.0f,0.0f);
+		glVertex3f(anch,prof,alt);
+	//	glTexCoord2f(1.0f,0.0f);
+		glVertex3f(anch,-prof,alt);
+	//	glTexCoord2f(1.0f,1.0f);
+		glVertex3f(anch,-prof,-alt);
+	glEnd();
+	glBegin(GL_QUADS);
+	//	glNormal3f(0.0f,-1.0f,0.0f);
+	//	glTexCoord2f(0.0f,1.0f);
+		glVertex3f(anch,-prof,alt);
+	//	glTexCoord2f(0.0f,0.0f);
+		glVertex3f(-anch,-prof,alt);
+	//	glTexCoord2f(1.0f,0.0f);
+		glVertex3f(-anch,-prof,-alt);
+	//	glTexCoord2f(1.0f,1.0f);
+		glVertex3f(anch,-prof,-alt);
+	glEnd();
+	glBegin(GL_QUADS);
+	//	glNormal3f(-1.0f,0.0f,0.0f);
+	//	glTexCoord2f(0.0f,1.0f);
+		glVertex3f(-anch,-prof,-alt);
+	//	glTexCoord2f(0.0f,0.0f);
+		glVertex3f(-anch,prof,-alt);
+	//	glTexCoord2f(1.0f,0.0f);
+		glVertex3f(-anch,prof,alt);
+	//	glTexCoord2f(1.0f,1.0f);
+		glVertex3f(-anch,-prof,alt);
+	glEnd(); 
+glBegin(GL_QUADS);
+	//	glNormal3f(0.0f,0.0f,1.0f);
+	//	glTexCoord2f(0.0f,1.0f);
+		glVertex3f(-anch,prof,alt);
+	//	glTexCoord2f(0.0f,0.0f);
+		glVertex3f(-anch,-prof,alt);
+	//	glTexCoord2f(1.0f,0.0f);
+		glVertex3f(anch,-prof,alt);
+	//	glTexCoord2f(1.0f,1.0f);
+		glVertex3f(anch,prof,alt);
+	glEnd();
+	glBegin(GL_QUADS);
+	//	glNormal3f(0.0f,0.0f,-1.0f);
+	//	glTexCoord2f(0.0f,1.0f);
+		glVertex3f(-anch,prof,-alt);
+	//	glTexCoord2f(0.0f,0.0f);
+		glVertex3f(-anch,-prof,-alt);
+	//	glTexCoord2f(1.0f,0.0f);
+		glVertex3f(anch,-prof,-alt);
+	//	glTexCoord2f(1.0f,1.0f);
+		glVertex3f(anch,prof,-alt);
+	glEnd();
+
+	//glDisable(GL_TEXTURE_2D);
+}
+
+
+
 /**
  *Dibuja la escena
  */ 
@@ -178,7 +271,21 @@ void display(){
 
   //Agregamos objetos al modelo
   agregar_objeto("objetos/porsche.obj",1);
-  
+//Jorge
+  glColor3f(1.0,1.0,1.0);
+
+  glPushMatrix();
+  glTranslatef(0,0,0);
+  dibujar_cubo(0.0,0.0,0.0,2.5,2.5,2.5);
+  glPopMatrix();
+
+  glColor3f(1.0,0,1.0);		
+
+  glPushMatrix();	
+  glTranslatef(0,0,5.0);
+  dibujar_cubo(0.0,0.0,0.0,2.0,5,2.0);
+  glPopMatrix();
+  //
   glutSwapBuffers();
 }
 
@@ -284,8 +391,8 @@ void initObjetos(){
   objetos[1].y= 0.4;
   objetos[1].z= 5;
 
-
 }
+
 
 /**
  * Funcion principal del programa
