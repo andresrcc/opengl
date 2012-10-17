@@ -24,10 +24,9 @@ int seleccion = 1;
 GLMmodel *modelo_CARRO = NULL;
 GLMmodel *modelo_AVION = NULL;
 //--Para moverlo--
-
-
 static GLdouble xant = 0.0, yant = 0.0;
 static GLint mouse_action = 0;
+
 
 struct objeto{
 //Coordenadas
@@ -41,8 +40,11 @@ struct objeto{
 //Arreglo de objetos y sus coordenadas
 figura objetos[4];
 
+
+
+
 /**
- * Sistema de Referencia
+ * Dibuja el Sistema de Referencia
  */
 
 void sistema_referencia(){
@@ -130,8 +132,7 @@ void sistema_referencia(){
 
 
 /**
- * Agrega objetos ya creados
- * al modelo
+ * Dibuja el carro y el avion
  */
 
 void dibujar_objetos(){
@@ -168,6 +169,11 @@ void dibujar_objetos(){
 
 }
 
+
+/*
+ * Funcion que maneja los clicks en el mouse
+ * Click Izquierdo para rotar la camara y derecho para acercarla y alejarla
+ */
 GLvoid mouseAction(GLint button, GLint state, GLint x, GLint y){
 	switch(button){
 		case GLUT_LEFT_BUTTON:
@@ -179,6 +185,9 @@ GLvoid mouseAction(GLint button, GLint state, GLint x, GLint y){
 	}
 }
 
+/*
+ * Funicion que maneja el movimiento del mouse
+ */
 GLvoid mouseMove(GLint x, GLint y){
 	float k = 0.01;
 	float kz = 0.5;
@@ -208,6 +217,9 @@ GLvoid mouseMove(GLint x, GLint y){
 }
 
 
+/*
+ * Carga un archivo BMP en memoria (actualmente no se utiliza)
+*/
 void loadBMP(char * imagepath){
 	unsigned char header[54];
 	unsigned int dataPos;
@@ -248,27 +260,10 @@ void loadBMP(char * imagepath){
 
 }
 
-
+/*
+ * Funcion que dibuja un cubo con la anchura, altura y profundidad dados
+ */
 void dibujar_cubo(GLfloat a, GLfloat b, GLfloat c, GLfloat anch, GLfloat alt, GLfloat prof){
-	/*unsigned char * textura;
-	GLuint idTextura;
-	FILE *file;
-	file = fopen("cajax.bmp","rb");
-	textura = (unsigned char*) malloc(256*256*4);
-	fread(textura, 256*256*4, 1, file);
-	fclose(file);
-	glGenTextures(1, &idTextura);
-	glBindTexture(GL_TEXTURE_2D, idTextura);
-	glTexImage2D(GL_TEXTURE_2D,0,3,256,256,0,GL_RGB,GL_UNSIGNED_BYTE,textura);
-	free(textura);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	*/
-	
-	//loadBMP("t2.bmp");
-
 
 	anch = anch/2;
 	alt = alt/2;
@@ -344,7 +339,9 @@ void dibujar_cubo(GLfloat a, GLfloat b, GLfloat c, GLfloat anch, GLfloat alt, GL
 	//glDisable(GL_TEXTURE_2D);
 }
 
-
+/*
+ * Dibuja al objeto creado por nosotros (Joe)
+ */
 void dibujar_Joe(){
 
   //in vec2 UV;
@@ -352,50 +349,50 @@ void dibujar_Joe(){
   
   //Matriz mayor
   glPushMatrix();
-  //trasladar todo el objeto
-  glTranslatef(objetos[3].x,objetos[3].y,objetos[3].z);
-  //Submatrices del objeto
-  //Cabeza
-  glColor3f(1.0f,1.0f,1.0f);
-  glPushMatrix();
- 	 glTranslatef(0,0.75,0);
- 	 dibujar_cubo(0.0,0.0,0.0,0.5,0.5,0.5);
+  	//trasladar todo el objeto
+  	glTranslatef(objetos[3].x,objetos[3].y,objetos[3].z);
+  	//Submatrices del objeto
+  	//Cabeza
+  	glColor3f(0.93f,0.81f,0.81f);
+  	glPushMatrix();
+ 		 glTranslatef(0,0.75,0);
+ 		 dibujar_cubo(0.0,0.0,0.0,0.5,0.5,0.5);
+ 	 glPopMatrix();
+ 	 //torso
+ 	 //glColor3f(1.0,0,1.0);		
+ 	 glPushMatrix();	
+ 		 glTranslatef(0,0,0);
+ 		 dibujar_cubo(0.0,0.0,0.0,0.3,0.15,1);
+ 	 glPopMatrix();
+ 	 //BrazoI
+ 	 //glColor3f(1.0,1.0,0);		
+ 	 glPushMatrix();	
+ 		 glTranslatef(0.35,0.2,-0.15);
+ 	 	 glRotatef(45.0,0,1.0,0);
+ 		 dibujar_cubo(0.0,0.0,0.0,0.45,0.1,0.1);
+ 	 glPopMatrix();
+ 	 //BrazoD
+ 	 //glColor3f(1.0,1.0,0);		
+ 	 glPushMatrix();	
+ 		 glTranslatef(-0.35,0.2,-0.15);
+		 glRotatef(-45.0,0,1.0,0);
+	 	 dibujar_cubo(0.0,0.0,0.0,0.45,0.1,0.1);
+	  glPopMatrix();
+	  //PiernaI
+	 //glColor3f(0,1.0,1.0);		
+	  glPushMatrix();	
+	 	 glTranslatef(0.15,-0.5,0);
+	 	 dibujar_cubo(0.0,0.0,0.0,0.1,0.1,0.5);
+	  glPopMatrix();
+	  //PiernaD
+	 //glColor3f(0,1.0,1.0);		
+	  glPushMatrix();	
+	 	 glTranslatef(-0.15,-0.5,0);
+	 	 dibujar_cubo(0.0,0.0,0.0,0.1,0.1,0.5);
+	  glPopMatrix();
+	
   glPopMatrix();
-  //torso
-  //glColor3f(1.0,0,1.0);		
-  glPushMatrix();	
- 	 glTranslatef(0,0,0);
- 	 dibujar_cubo(0.0,0.0,0.0,0.3,0.15,1);
-  glPopMatrix();
-  //BrazoI
-  //glColor3f(1.0,1.0,0);		
-  glPushMatrix();	
- 	 glTranslatef(0.35,0.2,-0.15);
-  	 glRotatef(45.0,0,1.0,0);
- 	 dibujar_cubo(0.0,0.0,0.0,0.45,0.1,0.1);
-  glPopMatrix();
-  //BrazoD
-  //glColor3f(1.0,1.0,0);		
-  glPushMatrix();	
- 	 glTranslatef(-0.35,0.2,-0.15);
-	 glRotatef(-45.0,0,1.0,0);
- 	 dibujar_cubo(0.0,0.0,0.0,0.45,0.1,0.1);
-  glPopMatrix();
-  //PiernaI
- //glColor3f(0,1.0,1.0);		
-  glPushMatrix();	
- 	 glTranslatef(0.15,-0.5,0);
- 	 dibujar_cubo(0.0,0.0,0.0,0.1,0.1,0.5);
-  glPopMatrix();
-  //PiernaD
- //glColor3f(0,1.0,1.0);		
-  glPushMatrix();	
- 	 glTranslatef(-0.15,-0.5,0);
- 	 dibujar_cubo(0.0,0.0,0.0,0.1,0.1,0.5);
-  glPopMatrix();
-
-  glPopMatrix();
-
+	
 }
 
 /**
@@ -408,6 +405,7 @@ void dibujar_flecha(){
   glTranslatef(objetos[seleccion].x-2,
 	       objetos[seleccion].y,
 	       objetos[seleccion].z);
+  glColor3f(0.0,1.0f,0.0);
   glBegin(GL_TRIANGLES);
      glVertex3f(1.0,3.0,0.0);
      glVertex3f(3.0,3.0,0.0);
@@ -445,12 +443,9 @@ void display(){
 
   //Establecemos el sist. de referencia
   sistema_referencia();
-
-  //Agregamos objetos al modelo
-  //agregar_objeto("objetos/porsche.obj",1);
+  //Se dibujan los objetos
   //agregar_objeto("objetos/f-16.obj",2);
   dibujar_objetos();
-//Jorge
   //Objeto propio
   dibujar_Joe();
 
@@ -596,10 +591,10 @@ int main (int argc, char** argv){
   glutInitWindowSize(600, 600);
   glutInitWindowPosition (10, 50);
   glutCreateWindow("Visualizador de Modelos 3D");
+  //Iluminacion (solo para los obj)
   glShadeModel(GL_SMOOTH);
   glLightfv(GL_LIGHT0,GL_AMBIENT,ambient);
   glEnable(GL_LIGHT0);
-  //glEnable(GL_LIGHTING);
   //Posicionamos las figuras
   initObjetos();
   modelo_CARRO = glmReadOBJ("objetos/porsche.obj");
@@ -615,17 +610,13 @@ int main (int argc, char** argv){
   //Accion por defecto (al estar idle)
   glutIdleFunc(display);
 
-  //Funcion que activa el input por teclado
+  //Funcion que activa el input por teclado o mouse
   glutKeyboardFunc(teclado);
   glutSpecialFunc(teclas_esp);
   glutMotionFunc(mouseMove);
   glutMouseFunc(mouseAction);
 
   glEnable(GL_DEPTH_TEST);
-
-//  glMatrixMode(GL_PROJECTION);
-//  glLoadIdentity();
-//  glOrtho(-2.0,2.0,-2.0,2.0,-100.0,100.0);
 
   //Ejecutar todo
   glutMainLoop();
