@@ -383,6 +383,26 @@ void dibujar_Joe(){
 
 }
 
+/**
+ * Dibuja la flecha de seleccion
+ */
+
+void dibujar_flecha(){
+
+  glPushMatrix();
+  glTranslatef(objetos[seleccion].x-2,
+	       objetos[seleccion].y,
+	       objetos[seleccion].z);
+  glBegin(GL_TRIANGLES);
+     glVertex3f(1.0,3.0,0.0);
+     glVertex3f(3.0,3.0,0.0);
+     glVertex3f(2.0,2.0,0.0);
+  glEnd();
+  glPopMatrix();
+
+
+}
+
 
 /**
  *Dibuja la escena
@@ -414,9 +434,13 @@ void display(){
   //Agregamos objetos al modelo
   agregar_objeto("objetos/porsche.obj",1);
   agregar_objeto("objetos/f-16.obj",2);
-//Jorge
+
+  //Objeto propio
   dibujar_Joe();
-    //
+
+  //Flecha de seleccion
+  dibujar_flecha();
+
   glutSwapBuffers();
 }
 
