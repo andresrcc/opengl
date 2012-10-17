@@ -3,8 +3,8 @@
 #include <GL/glut.h>
 #include <math.h>
 #include "glm.h"
-#include <string.h>
-#include <stdint.h>
+//#include <string.h>
+//#include <stdint.h>
 
 /**
  * Variables Globales
@@ -333,6 +333,13 @@ void dibujar_cubo(GLfloat a, GLfloat b, GLfloat c, GLfloat anch, GLfloat alt, GL
 void dibujar_Joe(){
 
   //in vec2 UV;
+
+  
+  //Matriz mayor
+  glPushMatrix();
+  //trasladar todo el objeto
+  glTranslatef(objetos[3].x,objetos[3].y,objetos[3].z);
+  //Submatrices del objeto
   //Cabeza
   glColor3f(1.0f,1.0f,1.0f);
   glPushMatrix();
@@ -372,7 +379,7 @@ void dibujar_Joe(){
  	 dibujar_cubo(0.0,0.0,0.0,0.1,0.1,0.5);
   glPopMatrix();
 
-
+  glPopMatrix();
 
 }
 
@@ -406,6 +413,7 @@ void display(){
 
   //Agregamos objetos al modelo
   agregar_objeto("objetos/porsche.obj",1);
+  agregar_objeto("objetos/f-16.obj",2);
 //Jorge
   dibujar_Joe();
     //
@@ -470,7 +478,16 @@ void teclado (unsigned char tecla, int x, int y){
        break;
      case 'q':
        distancia -= k;
-       break;      	
+       break;
+     case '3':
+       seleccion = 3;
+       break;
+     case '1':
+       seleccion = 1;
+       break;
+     case '2':
+       seleccion = 2;
+       break;
   }
   
 }
@@ -486,7 +503,7 @@ void teclas_esp (int tecla, int x, int y){
 
   switch(tecla){
       case GLUT_KEY_UP:
-	objetos[seleccion].z += k;
+	objetos[seleccion].z -= k;
 	break;
       case GLUT_KEY_LEFT:
 	objetos[seleccion].x -= k;
@@ -496,7 +513,7 @@ void teclas_esp (int tecla, int x, int y){
 
 	break;
       case GLUT_KEY_DOWN:
-	objetos[seleccion].z -= k;
+	objetos[seleccion].z += k;
 	break;
 
   }
@@ -510,9 +527,21 @@ void teclas_esp (int tecla, int x, int y){
 
 void initObjetos(){
 
+  
+  //Porsche 
   objetos[1].x= 5;
   objetos[1].y= 0.4;
   objetos[1].z= 5;
+
+  //F-16 (Avion)
+  objetos[2].x = -5;
+  objetos[2].y = 0.4;
+  objetos[2].z = 5;
+
+  //objeto propio (joe)
+  objetos[3].x = 5; 
+  objetos[3].y = 0.75;
+  objetos[3].z = -5;
 
 }
 
