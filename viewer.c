@@ -26,6 +26,9 @@ GLMmodel *modelo = NULL;
 //--Para moverlo--
 
 
+static GLdouble xant = 0.0, yant = 0.0;
+static GLint mouse_action = 0;
+
 struct objeto{
 //Coordenadas
   float x;
@@ -125,6 +128,7 @@ void sistema_referencia(){
 
 
 
+
 /**
  * Agrega objetos ya creados
  * al modelo
@@ -149,6 +153,87 @@ void agregar_objeto(char *path_archivo, int q){
   glPopMatrix();
 }
 
+GLvoid mouseAction(GLint button, GLint state, GLint x, GLint y){
+	switch(button){
+		case GLUT_LEFT_BUTTON:
+			mouse_action = 1;
+			break;
+		case GLUT_RIGHT_BUTTON:
+			mouse_action =2;
+			break;
+	}
+}
+
+GLvoid mouseMove(GLint x, GLint y){
+	float k = 0.01;
+	float kz = 0.5;
+	if (mouse_action == 1){
+		if(x-xant>0.0){
+			azimut += k;	
+		}else if(x-xant<0.0){
+			azimut -= k;
+		}
+		if(y-yant>0.0){
+			elevacion -= k;
+		}else if(y-yant<0.0){
+			elevacion += k;
+		}
+	}else if(mouse_action == 2){
+		if(y-yant>0.0){
+			distancia += kz;
+		}else if(y-yant<0.0){
+			distancia -= kz;
+		}
+	}
+	xant = x;
+	yant = y;	
+
+  
+
+}
+
+
+void loadBMP(char * imagepath){
+	unsigned char header[54];
+	unsigned int dataPos;
+	unsigned int width, height;
+	unsigned int imageSize;
+	unsigned char * data;
+	FILE * file = fopen(imagepath, "rb");
+	if (fread(header,1,54,file)!=54){
+//		return false;
+	}
+	if (header[0]!='B' || header[1]!='M'){
+//		return 0;
+	}
+	dataPos = *(int*)&(header[0x0A]);
+	imageSize = *(int*)&(header[0x22]);
+	width = *(int*)&(header[0x12]);
+	height = *(int*)&(header[0x16]);
+	if(imageSize==0){
+		imageSize = width*height*3;
+	}	
+	if(dataPos == 0){
+		dataPos = 54;
+	}
+	data = (unsigned char*)malloc(imageSize*sizeof(unsigned char));
+	fread(data,1,imageSize,file);
+	fclose(file);
+	GLuint textureID;
+	glGenTextures(1,&textureID);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+	glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,width,height,0,GL_RGB,GL_UNSIGNED_BYTE,data);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	
+
+
+
+}
+
+
 void dibujar_cubo(GLfloat a, GLfloat b, GLfloat c, GLfloat anch, GLfloat alt, GLfloat prof){
 	/*unsigned char * textura;
 	GLuint idTextura;
@@ -166,53 +251,57 @@ void dibujar_cubo(GLfloat a, GLfloat b, GLfloat c, GLfloat anch, GLfloat alt, GL
 	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	*/
+	
+	//loadBMP("t2.bmp");
+
+
 	anch = anch/2;
 	alt = alt/2;
 	prof = prof/2;
 	//glEnable(GL_TEXTURE_2D);
 	glBegin(GL_QUADS);
 		glNormal3f(0.0f,1.0f,0.0f);
-		//glTexCoord2f(1.0f,1.0f);
-		glVertex3f(-anch,prof,alt);
-		//glTexCoord2f(1.0f,0.0f);
-		glVertex3f(-anch,prof,-alt);
-		//glTexCoord2f(0.0f,0.0f);
-		glVertex3f(anch,prof,-alt);
 		//glTexCoord2f(0.0f,1.0f);
 		glVertex3f(anch,prof,alt);
+		//glTexCoord2f(0.0f,0.0f);
+		glVertex3f(anch,prof,-alt);
+		//glTexCoord2f(1.0f,0.0f);
+		glVertex3f(-anch,prof,-alt);
+		//glTexCoord2f(1.0f,1.0f);
+		glVertex3f(-anch,prof,alt);
 	glEnd();
 	glBegin(GL_QUADS);
 		glNormal3f(1.0f,0.0f,0.0f);
-		//glTexCoord2f(0.0f,1.0f);
-		glVertex3f(anch,prof,-alt);
-		//glTexCoord2f(0.0f,0.0f);
+		//glTexCoord2f(1.0f,1.0f);
 		glVertex3f(anch,prof,alt);
 		//glTexCoord2f(1.0f,0.0f);
-		glVertex3f(anch,-prof,alt);
-		//glTexCoord2f(1.0f,1.0f);
+		glVertex3f(anch,prof,-alt);
+		//glTexCoord2f(0.0f,0.0f);
 		glVertex3f(anch,-prof,-alt);
+		//glTexCoord2f(0.0f,1.0f);
+		glVertex3f(anch,-prof,alt);
 	glEnd();
 	glBegin(GL_QUADS);
 		glNormal3f(0.0f,-1.0f,0.0f);
-		//glTexCoord2f(0.0f,1.0f);
-		glVertex3f(anch,-prof,alt);
-		//glTexCoord2f(0.0f,0.0f);
-		glVertex3f(-anch,-prof,alt);
-		//glTexCoord2f(1.0f,0.0f);
-		glVertex3f(-anch,-prof,-alt);
 		//glTexCoord2f(1.0f,1.0f);
+		glVertex3f(anch,-prof,alt);
+		//glTexCoord2f(1.0f,0.0f);
 		glVertex3f(anch,-prof,-alt);
+		//glTexCoord2f(0.0f,0.0f);
+		glVertex3f(-anch,-prof,-alt);
+		//glTexCoord2f(0.0f,1.0f);
+		glVertex3f(-anch,-prof,alt);
 	glEnd();
 	glBegin(GL_QUADS);
 		glNormal3f(-1.0f,0.0f,0.0f);
-		//glTexCoord2f(0.0f,1.0f);
+		//glTexCoord2f(1.0f,1.0f);
+		glVertex3f(-anch,-prof,alt);
+		//glTexCoord2f(1.0f,0.0f);
 		glVertex3f(-anch,-prof,-alt);
 		//glTexCoord2f(0.0f,0.0f);
 		glVertex3f(-anch,prof,-alt);
-		//glTexCoord2f(1.0f,0.0f);
+		//glTexCoord2f(0.0f,1.0f);
 		glVertex3f(-anch,prof,alt);
-		//glTexCoord2f(1.0f,1.0f);
-		glVertex3f(-anch,-prof,alt);
 	glEnd(); 
 	glBegin(GL_QUADS);
 		glNormal3f(0.0f,0.0f,1.0f);
@@ -227,14 +316,14 @@ void dibujar_cubo(GLfloat a, GLfloat b, GLfloat c, GLfloat anch, GLfloat alt, GL
 	glEnd();
 	glBegin(GL_QUADS);
 		glNormal3f(0.0f,0.0f,-1.0f);
-		//glTexCoord2f(0.0f,1.0f);
-		glVertex3f(-anch,prof,-alt);
 		//glTexCoord2f(0.0f,0.0f);
-		glVertex3f(-anch,-prof,-alt);
+		glVertex3f(-anch,prof,-alt);
 		//glTexCoord2f(1.0f,0.0f);
-		glVertex3f(anch,-prof,-alt);
-		//glTexCoord2f(1.0f,1.0f);
 		glVertex3f(anch,prof,-alt);
+		//glTexCoord2f(1.0f,1.0f);
+		glVertex3f(anch,-prof,-alt);
+		//glTexCoord2f(0.0f,1.0f);
+		glVertex3f(-anch,-prof,-alt);
 	glEnd();
 
 	//glDisable(GL_TEXTURE_2D);
@@ -242,40 +331,42 @@ void dibujar_cubo(GLfloat a, GLfloat b, GLfloat c, GLfloat anch, GLfloat alt, GL
 
 
 void dibujar_Joe(){
+
+  //in vec2 UV;
   //Cabeza
-  glColor3f(1.0,1.0,1.0);
+  glColor3f(1.0f,1.0f,1.0f);
   glPushMatrix();
  	 glTranslatef(0,0.75,0);
  	 dibujar_cubo(0.0,0.0,0.0,0.5,0.5,0.5);
   glPopMatrix();
   //torso
-  glColor3f(1.0,0,1.0);		
+  //glColor3f(1.0,0,1.0);		
   glPushMatrix();	
  	 glTranslatef(0,0,0);
  	 dibujar_cubo(0.0,0.0,0.0,0.3,0.15,1);
   glPopMatrix();
   //BrazoI
-  glColor3f(1.0,1.0,0);		
+  //glColor3f(1.0,1.0,0);		
   glPushMatrix();	
  	 glTranslatef(0.35,0.2,-0.15);
   	 glRotatef(45.0,0,1.0,0);
  	 dibujar_cubo(0.0,0.0,0.0,0.45,0.1,0.1);
   glPopMatrix();
   //BrazoD
-  glColor3f(1.0,1.0,0);		
+  //glColor3f(1.0,1.0,0);		
   glPushMatrix();	
  	 glTranslatef(-0.35,0.2,-0.15);
 	 glRotatef(-45.0,0,1.0,0);
  	 dibujar_cubo(0.0,0.0,0.0,0.45,0.1,0.1);
   glPopMatrix();
   //PiernaI
- glColor3f(0,1.0,1.0);		
+ //glColor3f(0,1.0,1.0);		
   glPushMatrix();	
  	 glTranslatef(0.15,-0.5,0);
  	 dibujar_cubo(0.0,0.0,0.0,0.1,0.1,0.5);
   glPopMatrix();
   //PiernaD
- glColor3f(0,1.0,1.0);		
+ //glColor3f(0,1.0,1.0);		
   glPushMatrix();	
  	 glTranslatef(-0.15,-0.5,0);
  	 dibujar_cubo(0.0,0.0,0.0,0.1,0.1,0.5);
@@ -452,8 +543,14 @@ int main (int argc, char** argv){
   //Funcion que activa el input por teclado
   glutKeyboardFunc(teclado);
   glutSpecialFunc(teclas_esp);
+  glutMotionFunc(mouseMove);
+  glutMouseFunc(mouseAction);
 
   glEnable(GL_DEPTH_TEST);
+
+//  glMatrixMode(GL_PROJECTION);
+//  glLoadIdentity();
+//  glOrtho(-2.0,2.0,-2.0,2.0,-100.0,100.0);
 
   //Ejecutar todo
   glutMainLoop();
